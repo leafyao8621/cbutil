@@ -63,7 +63,7 @@ static CBBuilderError process_iprd(
         if (ret) {
             return CB_BUILDER_ERROR_ALLOC;
         }
-        Offset os = -1llu;
+        os = -1llu;
         ret =
             DArrayOffset_push_back(
                 &builder->ptr_iprd,
