@@ -17,11 +17,13 @@ static CBBuilderError process_iprd(
     CBBuilder *builder,
     char *meta_data,
     uint64_t meta_data_size,
-    Offset *offset_iprd) {
+    Offset *offset_iprd,
+    Offset *offset_alb) {
     if (!builder || !meta_data) {
         return CB_BUILDER_ERROR_NULLPTR;
     }
     *offset_iprd = -1llu;
+    *offset_alb = -1llu;
     Offset *ii = builder->offset_iprd.data;
     Offset *iii = builder->cnt_iprd.data;
     for (size_t i = 0; i < builder->offset_iprd.size; ++i, ++ii, ++iii) {
@@ -30,6 +32,7 @@ static CBBuilderError process_iprd(
                 builder->buf_iprd.data + *ii,
                 meta_data
             )) {
+            *offset_alb = i;
             *offset_iprd = *ii;
             ++*iii;
             return CB_BUILDER_ERROR_NONE;
@@ -415,7 +418,8 @@ CBBuilderError CBBuilder_build(CBBuilder *builder, char *dir) {
                         builder,
                         (char*)meta_data,
                         meta_data_size,
-                        &track.offset_iprd
+                        &track.offset_iprd,
+                        &track.offset_alb
                     );
                 if (iprd_err) {
                     free(meta_data);
@@ -741,5 +745,14 @@ CBBuilderError CBBuilder_build(CBBuilder *builder, char *dir) {
         sizeof(CBBuilderTrack),
         CBBuilderTrack_compare
     );
+    CBBuilderTrack *iter_track = builder->track.data;
+    for (size_t i = 0; i < builder->track.size; ++i, ++iter_track) {
+        if (
+            iter_track->offset_alb == -1llu ||
+            builder->ptr_iprd.data[iter_track->offset_alb] != -1llu) {
+            continue;
+        }
+        builder->ptr_iprd.data[iter_track->offset_alb] = i + builder->cnt_na;
+    }
     return CB_BUILDER_ERROR_NONE;
 }

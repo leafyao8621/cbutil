@@ -6,20 +6,23 @@ void CBBuilder_log(CBBuilder *builder, FILE *stream) {
     }
     Offset *offset_iprd_it = builder->offset_iprd.data;
     Offset *cnt_iprd_it = builder->cnt_iprd.data;
+    Offset *ptr_iprd_it = builder->ptr_iprd.data;
     for (
         size_t i = 0;
         i < builder->offset_iprd.size;
-        ++i, ++offset_iprd_it, ++cnt_iprd_it) {
+        ++i, ++offset_iprd_it, ++cnt_iprd_it, ++ptr_iprd_it) {
         fprintf(
             stream,
             "Album %zu:\n"
             "  offset_iprd: %lu\n"
             "  iprd: %s\n"
-            "  cnt: %lu\n",
+            "  cnt: %lu\n"
+            "  ptr: %lu\n",
             i,
             *offset_iprd_it,
             builder->buf_iprd.data + *offset_iprd_it,
-            *cnt_iprd_it
+            *cnt_iprd_it,
+            *ptr_iprd_it
         );
     }
     if (builder->cnt_na) {
@@ -39,13 +42,15 @@ void CBBuilder_log(CBBuilder *builder, FILE *stream) {
             "  offset_iprd: %lu\n"
             "  offset_fmt: %lu\n"
             "  offset_inam: %lu\n"
-            "  offset_itrk: %lu\n",
+            "  offset_itrk: %lu\n"
+            "  offset_alb: %lu\n",
             i,
             track->offset_fn,
             track->offset_iprd,
             track->offset_fmt,
             track->offset_inam,
-            track->offset_itrk
+            track->offset_itrk,
+            track->offset_alb
         );
         fprintf(
             stream,

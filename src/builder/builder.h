@@ -9,7 +9,13 @@ typedef struct CBBuilder CBBuilder;
 
 typedef struct CBBuilderTrack {
     CBBuilder *builder;
-    Offset offset_fn, offset_iprd, offset_fmt, offset_inam, offset_itrk;
+    Offset
+        offset_fn,
+        offset_iprd,
+        offset_fmt,
+        offset_inam,
+        offset_itrk,
+        offset_alb;
 } CBBuilderTrack;
 
 DEF_DARRAY(CBBuilderTrack)

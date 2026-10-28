@@ -28,24 +28,25 @@ CBBuilderError CBBuilder_write(CBBuilder *builder, int fd) {
     if (ret != 488) {
         return CB_BUILDER_ERROR_IO;
     }
-    Offset *iter_cnt_iprd = builder->cnt_iprd.data;
-    Offset *iter_offset_iprd = builder->offset_iprd.data;
+    Offset *cnt_iprd_it = builder->cnt_iprd.data;
+    Offset *offset_iprd_it = builder->offset_iprd.data;
+    Offset *ptr_iprd_it = builder->ptr_iprd.data;
     for (
         size_t i = 0;
         i < builder->cnt_iprd.size;
-        ++i, ++iter_cnt_iprd, ++iter_offset_iprd) {
-        ret = write(fd, iter_cnt_iprd, 8);
+        ++i, ++cnt_iprd_it, ++offset_iprd_it, ++ptr_iprd_it) {
+        ret = write(fd, cnt_iprd_it, 8);
         if (ret != 8) {
             return CB_BUILDER_ERROR_IO;
         }
-        ret = write(fd, zero_pad, 8);
+        ret = write(fd, ptr_iprd_it, 8);
         if (ret != 8) {
             return CB_BUILDER_ERROR_IO;
         }
         size_t iprd_len =
-            strlen(builder->buf_iprd.data + *iter_offset_iprd) + 1;
+            strlen(builder->buf_iprd.data + *offset_iprd_it) + 1;
         if (iprd_len <= 496) {
-            ret = write(fd, builder->buf_iprd.data + *iter_offset_iprd, iprd_len);
+            ret = write(fd, builder->buf_iprd.data + *offset_iprd_it, iprd_len);
             if (ret != (ssize_t)iprd_len) {
                 return CB_BUILDER_ERROR_IO;
             }
@@ -54,7 +55,7 @@ CBBuilderError CBBuilder_write(CBBuilder *builder, int fd) {
                 return CB_BUILDER_ERROR_IO;
             }
         } else {
-            ret = write(fd, builder->buf_iprd.data + *iter_offset_iprd, 495);
+            ret = write(fd, builder->buf_iprd.data + *offset_iprd_it, 495);
             if (ret != (ssize_t)iprd_len) {
                 return CB_BUILDER_ERROR_IO;
             }
