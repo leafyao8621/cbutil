@@ -9,7 +9,10 @@ const char *CBBuilderErrorLookup[] =
     };
 
 CBBuilderError CBBuilder_initialize(
-    CBBuilder *builder, bool verbose, uint64_t sampling_rate_cap, uint64_t bit_depth_cap) {
+    CBBuilder *builder,
+    bool verbose,
+    uint64_t sampling_rate_cap,
+    uint64_t bit_depth_cap) {
     if (!builder) {
         return CB_BUILDER_ERROR_NULLPTR;
     }
@@ -41,6 +44,9 @@ CBBuilderError CBBuilder_initialize(
     if (DArrayOffset_initialize(&builder->cnt_iprd, 1024)) {
         return CB_BUILDER_ERROR_ALLOC;
     }
+    if (DArrayOffset_initialize(&builder->ptr_iprd, 1024)) {
+        return CB_BUILDER_ERROR_ALLOC;
+    }
     if (DArrayCBBuilderTrack_initialize(&builder->track, 1024)) {
         return CB_BUILDER_ERROR_ALLOC;
     }
@@ -59,6 +65,7 @@ CBBuilderError CBBuilder_finalize(CBBuilder *builder) {
     DArrayOffset_finalize(&builder->offset_iprd);
     DArrayOffset_finalize(&builder->stack_path);
     DArrayOffset_finalize(&builder->cnt_iprd);
+    DArrayOffset_finalize(&builder->ptr_iprd);
     DArrayCBBuilderTrack_finalize(&builder->track);
     return CB_BUILDER_ERROR_NONE;
 }

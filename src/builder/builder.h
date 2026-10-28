@@ -18,7 +18,7 @@ struct CBBuilder {
     bool verbose;
     uint64_t sampling_rate_cap, bit_depth_cap, cnt_na;
     DArrayChar buf_fn, buf_iprd, buf_fmt, buf_inam, buf_itrk;
-    DArrayOffset offset_iprd, stack_path, cnt_iprd;
+    DArrayOffset offset_iprd, stack_path, cnt_iprd, ptr_iprd;
     DArrayCBBuilderTrack track;
 };
 
@@ -37,7 +37,8 @@ CBBuilderError CBBuilder_initialize(
     uint64_t sampling_rate_cap,
     uint64_t bit_depth_cap);
 CBBuilderError CBBuilder_finalize(CBBuilder *builder);
-CBBuilderError CBBuilder_build(CBBuilder *builder, char *dir, int fd);
+CBBuilderError CBBuilder_build(CBBuilder *builder, char *dir);
+CBBuilderError CBBuilder_write(CBBuilder *builder, int fd);
 void CBBuilder_log(CBBuilder *builder, FILE *stream);
 
 #endif // BUILDER_BUILDER_H

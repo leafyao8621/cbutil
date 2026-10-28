@@ -63,6 +63,15 @@ static CBBuilderError process_iprd(
         if (ret) {
             return CB_BUILDER_ERROR_ALLOC;
         }
+        Offset os = -1llu;
+        ret =
+            DArrayOffset_push_back(
+                &builder->ptr_iprd,
+                &os
+            );
+        if (ret) {
+            return CB_BUILDER_ERROR_ALLOC;
+        }
     }
     return CB_BUILDER_ERROR_NONE;
 }
@@ -102,12 +111,9 @@ static int CBBuilderTrack_compare(const void *a, const void *b) {
     return cmp;
 }
 
-CBBuilderError CBBuilder_build(CBBuilder *builder, char *dir, int fd) {
+CBBuilderError CBBuilder_build(CBBuilder *builder, char *dir) {
     if (!builder || !dir) {
         return CB_BUILDER_ERROR_NULLPTR;
-    }
-    if (fd < 0) {
-        return CB_BUILDER_ERROR_IO;
     }
     int ret =
         DArrayOffset_push_back(
