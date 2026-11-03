@@ -40,6 +40,7 @@ static CBBuilderError process_iprd(
     }
     if (*offset_iprd == -1llu) {
         *offset_iprd = builder->buf_iprd.size;
+        *offset_alb = builder->offset_iprd.size;
         int ret =
             DArrayOffset_push_back(
                 &builder->offset_iprd,
